@@ -1,0 +1,26 @@
+name: Build Moonshine Voice Color VST3
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -B build -G "Visual Studio 17 2022" -A x64
+
+      - name: Build VST3 (Release)
+        run: cmake --build build --config Release --target MoonshineVoiceColor_VST3 --parallel
+
+      - name: Package VST3 Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Moonshine-Voice-Color-VST3-Windows
+          path: build/MoonshineVoiceColor_artefacts/Release/VST3/Moonshine Voice Color.vst3
+          retention-days: 90
